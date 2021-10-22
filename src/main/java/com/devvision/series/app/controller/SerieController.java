@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -22,18 +21,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.devvision.series.app.core.utils.ReturnRequest;
 import com.devvision.series.app.core.utils.Status;
-import com.devvision.series.app.dto.ChangePasswordDTO;
-import com.devvision.series.app.dto.PermissionDTO;
-import com.devvision.series.app.dto.UserDTO;
+import com.devvision.series.app.dto.SerieDTO;
 import com.devvision.series.app.interfaces.controller.IController;
-import com.devvision.series.app.service.UserService;
+import com.devvision.series.app.service.SerieService;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/v1/users")
-public class UserController extends Controller implements IController<UserDTO> {
+@RequestMapping("/v1/series")
+public class SerieController extends Controller implements IController<SerieDTO> {
 	@Autowired 
-	private UserService service;
+	private SerieService service;
 	
 	@Autowired
 	private Status status;
@@ -92,8 +89,10 @@ public class UserController extends Controller implements IController<UserDTO> {
 	}
 
 	@PostMapping
-	public ReturnRequest insert(@RequestHeader Map<String, String> headers, @Valid @RequestBody UserDTO dto) {
+	public ReturnRequest insert(@RequestHeader Map<String, String> headers, @Valid @RequestBody SerieDTO dto) {
 		try {
+			verifyToken(headers.get("token"));
+			
 			ReturnRequest result = service.insert(dto);
 			
 			ResponseEntity.ok(result.getData());
@@ -115,7 +114,7 @@ public class UserController extends Controller implements IController<UserDTO> {
 	}
 	
 	@PutMapping("/{id}")
-	public ReturnRequest update(@RequestHeader Map<String, String> headers, @Valid @PathVariable Long id, @RequestBody UserDTO dto) {
+	public ReturnRequest update(@RequestHeader Map<String, String> headers, @Valid @PathVariable Long id, @RequestBody SerieDTO dto) {
 		try {
 			verifyToken(headers.get("token"));
 			
@@ -149,82 +148,6 @@ public class UserController extends Controller implements IController<UserDTO> {
 			ResponseEntity.ok();
 			response.setStatus(result.getStatus());
 			
-			return result;
-		} catch (Exception e) {
-			ReturnRequest resultRequest = ReturnRequest.builder()
-					.success(0)
-					.status(status.getCode400())
-					.errorMessage(e.getMessage())
-					.build();
-			
-			ResponseEntity.badRequest().build();
-			response.setStatus(status.getCode400());
-			
-			return resultRequest;
-		}
-	}
-	
-	@PostMapping("/permission")
-	public ReturnRequest insertPermission(@RequestHeader Map<String, String> headers, @Valid @RequestBody PermissionDTO dto) {
-		try {
-			verifyToken(headers.get("token"));
-			
-			ReturnRequest result = service.insertPermission(dto);
-			
-			ResponseEntity.ok(result.getData());
-			response.setStatus(result.getStatus());
-		
-			return result;
-		} catch (Exception e) {
-			ReturnRequest resultRequest = ReturnRequest.builder()
-					.success(0)
-					.status(status.getCode400())
-					.errorMessage(e.getMessage())
-					.build();
-			
-			ResponseEntity.badRequest().build();
-			response.setStatus(status.getCode400());
-			
-			return resultRequest;
-		}
-	}
-	
-	@DeleteMapping("/permission/{idUser}/{idGroup}")
-	public ReturnRequest deletePermission(@RequestHeader Map<String, String> headers, @PathVariable Long idUser, @PathVariable Long idGroup) {
-		try {
-			verifyToken(headers.get("token"));
-			
-			ReturnRequest result = service.deletePermission(idUser, idGroup);
-			
-			ResponseEntity.ok();
-			response.setStatus(result.getStatus());
-			
-			return result;
-		} catch (Exception e) {
-			ReturnRequest resultRequest = ReturnRequest.builder()
-					.success(0)
-					.status(status.getCode400())
-					.errorMessage(e.getMessage())
-					.build();
-			
-			ResponseEntity.badRequest().build();
-			response.setStatus(status.getCode400());
-			
-			return resultRequest;
-		}
-	}
-	
-	@PatchMapping("/change-password/{id}")
-	public ReturnRequest changePassword(@RequestHeader Map<String, String> headers, 
-			@PathVariable Long id, @Valid @RequestBody ChangePasswordDTO dto) {
-		try {
-			verifyToken(headers.get("token"));
-			
-			ReturnRequest result = service.changePasswordUser(id, dto);
-			
-			ResponseEntity.ok(result.getData());
-			response.setStatus(result.getStatus());
-		
 			return result;
 		} catch (Exception e) {
 			ReturnRequest resultRequest = ReturnRequest.builder()
