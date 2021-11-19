@@ -42,6 +42,7 @@ public class Serie implements Serializable {
 	@Column(name="imdb_identifier")
 	private String imdbIdentifier;
 	
+//	@Column(length=1000)
 	private String image;
 	
 	private String title;
@@ -66,6 +67,8 @@ public class Serie implements Serializable {
 	private String creators;
 	
 	private int seasons;
+	
+//	private boolean finishedSeries;
 	
 	
 }

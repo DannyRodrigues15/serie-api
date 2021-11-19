@@ -28,7 +28,7 @@ public class SerieDTO implements Serializable {
 	private String genres;
 	private float imDbRating;
 	private String creators;
-	private List<Integer> seasons;
+	private TvSeriesInfoDTO tvSeriesInfo;
 	private List<Episode> episodes;
 	
 }

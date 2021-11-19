@@ -14,7 +14,8 @@ import lombok.NoArgsConstructor;
 public class EpisodeDTO implements Serializable {
 	private static final long serialVersionUID = 54613728945135678L;
 
-	private String imdbIdentifier;
+//	private String imdbIdentifier;
+	private String id;
 	private int seasonNumber;
 	private int episodeNumber;
 	private String title;
